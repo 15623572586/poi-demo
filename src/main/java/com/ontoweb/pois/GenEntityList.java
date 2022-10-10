@@ -48,20 +48,21 @@ public class GenEntityList {
                 Field field = null;  // 获取私有属性字段
                 try {
                     field = clazz.getDeclaredField(key);
-                } catch (NoSuchFieldException e) {
-                    throw new RuntimeException(e);
-                }
-                field.setAccessible(true);  // 设置私有属性修改权限
-                Integer col = fieldsMap.get(key);  // 获取列
-                if(col > list.size() - 1) continue;  //  不在列范围内
-                String value = list.get(col);  // 获取col列的值
-                if (StringUtils.isNotEmpty(value)) {  // 如果数据不为空设置字段值
-                    try {
-                        field.set(entity, value);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
+                    field.setAccessible(true);  // 设置私有属性修改权限
+                    Integer col = fieldsMap.get(key);  // 获取列
+                    if(col > list.size() - 1) continue;  //  不在列范围内
+                    String value = list.get(col);  // 获取col列的值
+                    if (StringUtils.isNotEmpty(value)) {  // 如果数据不为空设置字段值
+                        try {
+                            field.set(entity, value);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                     }
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
                 }
+
             }
             entities.add(entity);
         }
