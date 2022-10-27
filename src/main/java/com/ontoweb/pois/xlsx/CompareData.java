@@ -1,4 +1,4 @@
-package com.ontoweb.pois;
+package com.ontoweb.pois.xlsx;
 
 import com.ontoweb.pois.utils.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -8,6 +8,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.poi.ss.usermodel.FillPatternType.*;
 
 public class CompareData {
     public static List<List<String>> readData(File file, int sheetNum) throws IOException {
@@ -176,7 +178,7 @@ public class CompareData {
                 Cell cell1 = sheet.getRow(j).getCell(k);
                 if (cell1 == null) cell1 = sheet.getRow(j).createCell(k);
                 style.setFillForegroundColor(colorIndex);// 设置背景色
-                style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                style.setFillPattern(SOLID_FOREGROUND);
                 style.setBorderLeft(BorderStyle.THIN);
                 style.setBorderRight(BorderStyle.THIN);
                 style.setBorderTop(BorderStyle.THIN);

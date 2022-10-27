@@ -1,4 +1,4 @@
-package com.ontoweb.pois;
+package com.ontoweb.pois.xlsx;
 
 import com.ontoweb.pois.utils.StringUtils;
 import lombok.Data;
@@ -42,7 +42,7 @@ public class GenEntityList {
         };
         List<Object> entities = new ArrayList<>();
         for (List<String> list: data) {
-            Class<?> clazz = Class.forName("com.ontoweb.pois.Entity");
+            Class<?> clazz = Class.forName("com.ontoweb.pois.xlsx.Entity");
             Object entity = clazz.newInstance();
             for(String key : fieldsMap.keySet()) {
                 Field field = null;  // 获取私有属性字段
@@ -70,7 +70,7 @@ public class GenEntityList {
     }
 
     public static List<String> getFieldsDemo() throws ClassNotFoundException {
-        Class<?> entityClass = Class.forName("com.ontoweb.pois.Entity");
+        Class<?> entityClass = Class.forName("com.ontoweb.pois.xlsx.Entity");
         Field[] fields = entityClass.getDeclaredFields();  // 私有属性
         List<String> fs = new ArrayList<>();
         for(Field field: fields){
