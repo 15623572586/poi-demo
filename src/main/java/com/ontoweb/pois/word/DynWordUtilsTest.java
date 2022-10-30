@@ -18,7 +18,7 @@ public class DynWordUtilsTest {
      * @throws Exception
      */
     public static void main(String[] args) {
-        testImage();
+//        testImage();
         testT();
     }
 
@@ -59,7 +59,7 @@ public class DynWordUtilsTest {
         List<String> tbRow1_row2 = new ArrayList<>(Arrays.asList("2、模块二", "分类2"));
         tbRow1.add(tbRow1_row1);
         tbRow1.add(tbRow1_row2);
-        paramMap.put(PoiWordUtils.addRowText + "tb1", tbRow1);
+        paramMap.put("tb1", tbRow1);
 
         List<List<String>> tbRow2 = new ArrayList<>();
         List<String> tbRow2_row1 = new ArrayList<>(Arrays.asList("指标c", "指标c的意见"));

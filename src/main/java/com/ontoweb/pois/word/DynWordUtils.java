@@ -335,26 +335,26 @@ public class DynWordUtils {
 
         // 新添加的行
         List<XWPFTableRow> newRows = new ArrayList<>();
-        if (dataList == null || dataList.size() <= 0) {
-            return newRows;
-        } else {
-            return newRows = new ArrayList<>(dataList.size());
-        }
-
-//        XWPFTableRow currentRow = flagRow;
-//        int cellSize = flagRow.getTableCells().size();
-//        for (int i = 0, size = dataList.size(); i < size; i++) {
-//            if (i != 0) {
-//                currentRow = table.createRow();
-//                // 复制样式
-//                if (flagRow.getCtRow() != null) {
-//                    currentRow.getCtRow().setTrPr(flagRow.getCtRow().getTrPr());
-//                }
-//            }
-//            addRow(flagCell, currentRow, cellSize, dataList.get(i));
-//            newRows.add(currentRow);
+//        if (dataList == null || dataList.size() <= 0) {
+//            return newRows;
+//        } else {
+//            return newRows = new ArrayList<>(dataList.size());
 //        }
-//        return newRows;
+
+        XWPFTableRow currentRow = flagRow;
+        int cellSize = flagRow.getTableCells().size();
+        for (int i = 0, size = dataList.size(); i < size; i++) {
+            if (i != 0) {
+                currentRow = table.createRow();
+                // 复制样式
+                if (flagRow.getCtRow() != null) {
+                    currentRow.getCtRow().setTrPr(flagRow.getCtRow().getTrPr());
+                }
+            }
+            addRow(flagCell, currentRow, cellSize, dataList.get(i));
+            newRows.add(currentRow);
+        }
+        return newRows;
     }
 
     /**
