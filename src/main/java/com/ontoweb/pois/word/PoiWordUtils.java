@@ -40,8 +40,8 @@ public class PoiWordUtils {
     /**
      * 表格中占位符的开头 ${tbAddRow:  例如${tbAddRow:tb1}
      */
-    public static final String addRowFlag = "${";
-//    public static final String addRowFlag = PLACEHOLDER_PREFIX + addRowText;
+//    public static final String addRowFlag = "${";
+    public static final String addRowFlag = PLACEHOLDER_PREFIX + addRowText;
 
     /**
      * 占位符的后缀

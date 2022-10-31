@@ -78,7 +78,8 @@ public class DynWordUtils {
         writer = new Word07Writer(inFile);
         templateDoc = writer.getDoc();
 
-        try (FileOutputStream outStream = new FileOutputStream(outPath)) {
+        try {
+            FileOutputStream outStream = new FileOutputStream(outPath);
             parseTemplateWord();
             templateDoc.write(outStream);
         } catch (Exception e) {
@@ -88,7 +89,8 @@ public class DynWordUtils {
             String methodName = stackTrace[0].getMethodName();
             String fileName = stackTrace[0].getFileName();
             int lineNumber = stackTrace[0].getLineNumber();
-            throw new RuntimeException(e.getCause().getMessage());
+            e.printStackTrace();
+//            throw new RuntimeException(e.getCause().getMessage());
         }
     }
 
@@ -298,6 +300,7 @@ public class DynWordUtils {
                 currentPar.getCTP().setPPr(null);
                 //设置缩进
                 currentPar.setIndentationFirstLine(indentationFirstLine);
+                currentPar.setFontAlignment(2);  // 2-居中对齐，1-左对齐，3-右对齐
                 addPicture(currRun, imageEntity);
             } else {
                 changeValue(currRun, text, paramMap);
@@ -335,9 +338,10 @@ public class DynWordUtils {
 
         // 新添加的行
         List<XWPFTableRow> newRows = new ArrayList<>();
-//        if (dataList == null || dataList.size() <= 0) {
-//            return newRows;
-//        } else {
+        if (dataList == null || dataList.size() <= 0) {
+            return newRows;
+        }
+//        else {
 //            return newRows = new ArrayList<>(dataList.size());
 //        }
 
