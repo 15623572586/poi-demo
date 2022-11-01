@@ -5,6 +5,7 @@ import cn.hutool.poi.word.Word07Writer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -334,6 +335,7 @@ public class DynWordUtils {
         XWPFTableCell flagCell = flagRowCells.get(0);
 
         String text = flagCell.getText();
+        Boolean mergeFlag = text.contains("tbAddRow:analysis");
         List<List<String>> dataList = (List<List<String>>) PoiWordUtils.getValueByPlaceholder(paramMap, text);
 
         // 新添加的行
@@ -347,6 +349,10 @@ public class DynWordUtils {
 
         XWPFTableRow currentRow = flagRow;
         int cellSize = flagRow.getTableCells().size();
+        int startRow = 1;
+        int endRow = 0;
+        int[][] mergeRows = new int[6][2];
+        int idx = 0;
         for (int i = 0, size = dataList.size(); i < size; i++) {
             if (i != 0) {
                 currentRow = table.createRow();
@@ -354,12 +360,65 @@ public class DynWordUtils {
                 if (flagRow.getCtRow() != null) {
                     currentRow.getCtRow().setTrPr(flagRow.getCtRow().getTrPr());
                 }
+                if (mergeFlag) {
+                    boolean eqFlag = dataList.get(i).get(0).equals(dataList.get(i - 1).get(0));
+                    if (eqFlag) { // 第一列与前一行相同
+                        endRow = i+1;
+                        mergeRows[idx][0] = startRow;
+                        mergeRows[idx][1] = endRow;
+                    }else {
+                        startRow = i+1;
+                        idx++;
+                    }
+                }
             }
             addRow(flagCell, currentRow, cellSize, dataList.get(i));
             newRows.add(currentRow);
         }
+        for (int[] range : mergeRows) {
+            mergeCellsVertically(table, 0, range[0], range[1]);
+        }
         return newRows;
     }
+    /**
+     * @Description: 跨行合并
+     * table要合并单元格的表格
+     * col要合并哪一列的单元格
+     * fromRow从哪一行开始合并单元格
+     * toRow合并到哪一个行
+     */
+    public  void mergeCellsVertically(XWPFTable table, int col, int fromRow, int toRow) {
+        for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
+            XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
+            if ( rowIndex == fromRow ) {
+                // The first merged cell is set with RESTART merge value
+                cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
+            } else {
+                // Cells which join (merge) the first one, are set with CONTINUE
+                cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+            }
+        }
+    }
+    /**
+     * @Description: 跨列合并
+     * table要合并单元格的表格
+     * row要合并哪一行的单元格
+     * fromCell开始合并的单元格
+     * toCell合并到哪一个单元格
+     */
+    public  void mergeCellsHorizontal(XWPFTable table, int row, int fromCell, int toCell) {
+        for (int cellIndex = fromCell; cellIndex <= toCell; cellIndex++) {
+            XWPFTableCell cell = table.getRow(row).getCell(cellIndex);
+            if ( cellIndex == fromCell ) {
+                // The first merged cell is set with RESTART merge value
+                cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
+            } else {
+                // Cells which join (merge) the first one, are set with CONTINUE
+                cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            }
+        }
+    }
+
 
     /**
      * 根据模板cell添加新行
